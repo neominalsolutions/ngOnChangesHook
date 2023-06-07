@@ -8,6 +8,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
+// pure component.
+
 @Component({
   selector: 'app-test-on-changes',
   templateUrl: './test-on-changes.component.html',
@@ -18,7 +20,7 @@ export class TestOnChangesComponent implements OnChanges, DoCheck {
   constructor(private cd: ChangeDetectorRef) {}
 
   ngDoCheck(): void {
-    this.cd.markForCheck();
+    // this.cd.markForCheck();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -20,6 +20,11 @@
 </p>
 
 
+<app-save-button color="red" bgColor="blue" (onClick)="btnClick()"></app-save-button>
+
+
+<app-save-button #save1 color="yellow" bgColor="gray"></app-save-button>
+
 <app-test-on-changes [objInput]="obj" [arrayInput]="arr" [valueInput]="val"></app-test-on-changes>
 
 <router-outlet></router-outlet>

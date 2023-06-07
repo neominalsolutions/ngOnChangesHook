@@ -1,7 +1,9 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ViewChild,
 } from '@angular/core';
 import {
   Subject,
@@ -14,13 +16,16 @@ import {
   tap,
   timer,
 } from 'rxjs';
+import { SaveButtonComponent } from './components/save-button/save-button.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  btnClick() {}
+
   title = 'OnChangesApp';
 
   randomSubject = new Subject<number>();
@@ -55,6 +60,8 @@ export class AppComponent {
       });
   }
 
+  ngAfterViewInit(): void {}
+
   val: number = 0;
 
   obj = {
@@ -73,7 +80,8 @@ export class AppComponent {
   }
 
   pushSpreadArray() {
-    this.arr = [...this.arr, 'ali'];
+    this.arr = [...this.arr, { id: 5, name: 'hakan' }];
+    this.arr = [{ id: 4, name: 'tansu' }, ...this.arr];
     console.log('arr', this.arr);
   }
 
@@ -97,8 +105,11 @@ export class AppComponent {
     console.log('removeArray', this.arr);
   }
 
+  @ViewChild('save1') save1!: SaveButtonComponent;
+
   changeValue() {
     this.val = 1;
+    this.save1.setDisabled(true);
   }
 
   changeTitleValue() {
