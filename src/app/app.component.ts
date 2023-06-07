@@ -3,10 +3,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 import {
   Subject,
+  Subscription,
   catchError,
   delay,
   delayWhen,
@@ -23,16 +25,26 @@ import { SaveButtonComponent } from './components/save-button/save-button.compon
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnDestroy {
   btnClick() {}
 
   title = 'OnChangesApp';
+  subscription!: Subscription;
+  subs: Subscription[] = [];
 
+  // üzerinde takip edeceğimiz veriler için subject tipi kullanıyoruz.
   randomSubject = new Subject<number>();
   randomObservable = this.randomSubject.asObservable();
+  // subject gözlemlenebilir yapıyoruz
 
   constructor(private cd: ChangeDetectorRef) {
-    this.randomObservable
+    this.subs.push(
+      this.randomObservable.subscribe((val) => {
+        console.log('val', val);
+      })
+    );
+
+    this.subscription = this.randomObservable
       .pipe(
         filter((value) => value < 100),
         tap((value) => {
@@ -58,6 +70,13 @@ export class AppComponent implements AfterViewInit {
       .subscribe((val) => {
         console.log('valueChange', val);
       });
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+
+    this.subs.forEach((sb) => {
+      sb.unsubscribe();
+    });
   }
 
   ngAfterViewInit(): void {}
@@ -112,16 +131,17 @@ export class AppComponent implements AfterViewInit {
     this.save1.setDisabled(true);
   }
 
-  changeTitleValue() {
+  generateRandom() {
+    // subject içerisine değer set etmek için next methodu kullanılır.
     this.randomSubject.next(Math.round(Math.random() * 1000));
     this.SetInterval();
   }
 
   SetInterval() {
-    const interval1 = interval(1000)
-      .pipe(delay(5000))
-      .subscribe((val) => {
-        console.log('interval', val);
-      });
+    // const interval1 = interval(1000)
+    //   .pipe(delay(5000))
+    //   .subscribe((val) => {
+    //     console.log('interval', val);
+    //   });
   }
 }
